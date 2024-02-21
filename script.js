@@ -22,10 +22,13 @@ document.addEventListener("DOMContentLoaded", function () {
     // Replace the existing content of the div with the new paragraph
     maintext.innerHTML = '';
     maintext.appendChild(newParagraph);
-});
 
-document.addEventListener('DOMContentLoaded', function () {
-    const maintext = document.querySelector('.maintext');
+    // Add click event listener to the document
+    document.addEventListener('click', function () {
+        // Navigate to the specified URL
+        window.location.href = 'https://moeebii.github.io/gardenhomepage/';
+    });
+
     const spotlight = document.createElement('div');
     spotlight.classList.add('spotlight');
     maintext.appendChild(spotlight);
@@ -50,38 +53,22 @@ document.addEventListener('DOMContentLoaded', function () {
 
         highlightWordsInSpotlight(maintext, mouseX, mouseY);
     });
+
+    function highlightWordsInSpotlight(targetElement, mouseX, mouseY) {
+        const spans = targetElement.querySelectorAll('span'); // split by word
+
+        spans.forEach((span) => {
+            const rect = span.getBoundingClientRect();
+            const wordX = rect.left + rect.width / 2 + window.scrollX; // calculate distance from cursor based on center of span
+            const wordY = rect.top + rect.height / 2 + window.scrollY;
+
+            const distance = Math.sqrt((mouseX - wordX) ** 2 + (mouseY - wordY) ** 2);
+
+            if (distance <= 70) {
+                span.classList.add('highlight');
+            } else {
+                span.classList.remove('highlight');
+            }
+        });
+    }
 });
-
-function highlightWordsInSpotlight(targetElement, mouseX, mouseY) {
-    const spans = targetElement.querySelectorAll('span'); // split by word
-
-    spans.forEach((span) => {
-        const rect = span.getBoundingClientRect();
-        const wordX = rect.left + rect.width / 2 + window.scrollX; // calculate distance from cursor based on center of span
-        const wordY = rect.top + rect.height / 2 + window.scrollY;
-
-        const distance = Math.sqrt((mouseX - wordX) ** 2 + (mouseY - wordY) ** 2);
-
-        if (distance <= 70) {
-            span.classList.add('highlight');
-        } else {
-            span.classList.remove('highlight');
-        }
-    });
-}
-
-function handlePageLoadAndResize() {
-    window.addEventListener('load', (mouseEvent, spotlight) => {
-        const mouseX = 75;
-        const mouseY = 75;
-        highlightWordsInSpotlight(document.querySelector('.maintext'), mouseX, mouseY);
-    });
-
-    window.addEventListener('resize', (mouseEvent) => {
-        const mouseX = mouseEvent.clientX;
-        const mouseY = mouseEvent.clientY;
-        highlightWordsInSpotlight(document.querySelector('.maintext'), mouseX, mouseY);
-    });
-}
-
-handlePageLoadAndResize();
